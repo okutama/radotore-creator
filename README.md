@@ -1,2 +1,2 @@
-# radotore-creater
+# radotore-creator
 Post Rado-tore easily
