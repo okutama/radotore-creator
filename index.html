@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>らどとれ Creater</title>
+    </head>
+    <body>
+        <div id="app">
+            <h1>らどとれ Creater</h1>
+            <p>[<input v-model="line" /> | <input v-model="boundFor" />]</p>
+            <p>&gt;&gt;&gt;つぎは&gt;&gt;&gt;<input v-model="next" /></p>
+            <p>乗車区間: <input v-model="from" />→<input v-model="to" /></p>
+            <p>#<input v-model="name" />とれ</p>
+            <button @click="copyToClipboard(entryText)" type="button">Copy</button>
+            <textarea rows="10" cols="50" readonly style="display: block">{{entryText}}</textarea>
+        </div>
+    </body>
+</html>
+
+<style>
+    button {
+        background: none;
+        border: none;
+        color: blue;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+</style>
+
+<script type="module">
+    import { createApp, ref, computed } from "https://unpkg.com/vue@3/dist/vue.esm-browser.js";
+
+    createApp({
+        setup() {
+            const line = ref("");
+            const boundFor = ref("");
+            const next = ref("");
+            const from = ref("");
+            const to = ref("");
+            const name = ref("");
+
+            const entryText = computed(() => {
+                return prettyText(
+                    `[${line.value} | ${boundFor.value}]`,
+                    `>>>つぎは>>>${next.value}`,
+                    `乗車区間: ${from.value}→${to.value}`,
+                    `#${name.value}とれ`,
+                );
+            });
+
+            function copyToClipboard(text) {
+                navigator.clipboard
+                    .writeText(text)
+                    .then(() => {
+                        console.log("copied!");
+                        window.alert("Copied!");
+                    })
+                    .catch((e) => {
+                        console.error(e);
+                        window.alert("Errored(?)...");
+                    });
+            }
+
+            function prettyText(...arg) {
+                return arg.join("\n");
+            }
+
+            return {
+                line,
+                boundFor,
+                next,
+                from,
+                to,
+                name,
+                entryText,
+                copyToClipboard,
+            };
+        },
+    }).mount("#app");
+</script>
